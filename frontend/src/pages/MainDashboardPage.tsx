@@ -49,8 +49,8 @@ const MainDashboardPage = () => {
   const { user, isAuthLoading } = useUserAuth();
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [originUrl, setOriginUrl] = useState<string | undefined>();
-  const [newLink, setNewLink] = useState<GetUserLinkRes | undefined>();
+  const [originUrl, setOriginUrl] = useState<string>("");
+  const [newLink, setNewLink] = useState<GetUserLinkRes | undefined>(undefined);
   const [userLinks, setUserLinks] = useState<GetUserLinkRes[]>([]);
 
   useEffect(() => {

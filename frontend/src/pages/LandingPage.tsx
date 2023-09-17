@@ -25,8 +25,8 @@ const LandingPage = () => {
   const toast = useToast({ isClosable: true, duration: 1500 });
   const [isSignupLoading, setIsSignupLoading] = useState<boolean>(false);
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
-  const [username, setUsername] = useState<string | undefined>();
-  const [password, setPassword] = useState<string | undefined>();
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const { isAuthLoading, user, setTokenAndFetchUser } = useUserAuth();
 
