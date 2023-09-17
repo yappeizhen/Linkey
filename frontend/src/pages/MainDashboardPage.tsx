@@ -25,10 +25,10 @@ import { AppHeader } from "../components/AppHeader";
 import { useEffect, useState } from "react";
 import { createLink, deleteLink, getUserLinks } from "../api/links";
 import AppFooter from "../components/AppFooter";
-import LinkeyModal from "../features/LinkeyModal";
 import { useUserAuth } from "../contexts/UserAuthContext";
 import { GetUserLinkRes } from "../types/links";
 import LoadingPage from "./LoadingPage";
+import LinkeyModal from "../components/LinkeyModal";
 
 const moveDown = keyframes({
   "0%": {
