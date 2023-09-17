@@ -48,5 +48,6 @@ This should start up the frontend, backend, and a dockerized PosgreSQL database.
 
 ### Demo
 
-Uploading Screen Recording 2023-09-18 at 12.44.09 AM.mov…
+https://github.com/yappeizhen/Linkey/assets/66234273/738e1055-d302-4983-b23a-4f39e9e62c06
+
 
