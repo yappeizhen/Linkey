@@ -1,4 +1,14 @@
-import React, { ReactNode, createContext, useContext, useState } from "react";
+import { useToast } from "@chakra-ui/react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { logout, whoami } from "../api/userAuth";
 
 type User = {
   id: number;
@@ -6,8 +16,11 @@ type User = {
 };
 
 type UserAuthContextProps = {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isAuthLoading: boolean;
+  token?: string;
+  user?: User;
+  logoutUser: () => {};
+  setTokenAndFetchUser: (token: string) => Promise<void>;
 };
 
 const UserAuthContext = createContext<UserAuthContextProps | undefined>(
@@ -22,11 +35,82 @@ export const useUserAuth = () => {
   return context;
 };
 
+const SESSION_STORAGE_KEYS = {
+  linkeyToken: "linkeyToken",
+};
+
 export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
+  const [user, setUser] = useState<User | undefined>();
+  const [token, setToken] = useState<string | undefined>();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const setTokenAndFetchUser = useCallback(
+    async (newToken: string) => {
+      setIsAuthLoading(true);
+      setToken(newToken);
+      try {
+        const data = await whoami({
+          token: newToken,
+        });
+        setUser(data.user);
+      } catch (e: any) {
+        toast({ status: "error", description: e.message });
+      } finally {
+        setIsAuthLoading(false);
+      }
+    },
+    [toast]
+  );
+
+  useEffect(() => {
+    // Check for token in sessionStorage on initial load
+    const token = sessionStorage.getItem(SESSION_STORAGE_KEYS.linkeyToken);
+    if (token) {
+      // You can use this token to fetch more user details if needed
+      setToken(token);
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (user && token) {
+      // Save token to sessionStorage whenever it changes
+      sessionStorage.setItem(SESSION_STORAGE_KEYS.linkeyToken, token);
+    }
+  }, [user, token]);
+
+  useEffect(() => {
+    if (!token && !user) navigate("/");
+  }, [token, user, navigate]);
+
+  useEffect(() => {
+    const fetchUser = async (userToken: string) => {
+      setTokenAndFetchUser(userToken);
+    };
+    token && fetchUser(token);
+  }, [token, setTokenAndFetchUser]);
+
+  const logoutUser = useCallback(async (): Promise<void> => {
+    await logout();
+    sessionStorage.removeItem(SESSION_STORAGE_KEYS.linkeyToken);
+    setToken(undefined);
+    setUser(undefined);
+    navigate("/");
+  }, [navigate]);
 
   return (
-    <UserAuthContext.Provider value={{ user, setUser }}>
+    <UserAuthContext.Provider
+      value={{
+        isAuthLoading,
+        user,
+        token,
+        logoutUser,
+        setTokenAndFetchUser,
+      }}
+    >
       {children}
     </UserAuthContext.Provider>
   );

@@ -11,17 +11,18 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { GetUserLinkRes } from "../types/links";
 
 const LinkeyModal = ({
   isOpen,
   onClose,
-  id,
+  link,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  id: string;
+  link: GetUserLinkRes;
 }) => {
-  const url = `${window.location.origin}/snip/${id}`;
+  const url = `${window.location.origin}/snip/${link.id}`;
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

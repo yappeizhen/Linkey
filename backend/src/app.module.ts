@@ -8,10 +8,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { AuthService } from './auth/auth.service';
 import { Link } from './entities/link.entity';
+import { AuthController } from './auth/auth.controller';
+import { LinkController } from './link/link.controller';
+import { LinkService } from './link/link.service';
 
 @Module({
   imports: [PastyConfigModule, TypeOrmModule.forFeature([User, Link])],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserService, AuthService],
+  controllers: [AppController, UserController, AuthController, LinkController],
+  providers: [AppService, UserService, AuthService, LinkService],
 })
 export class AppModule {}

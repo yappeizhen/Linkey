@@ -1,14 +1,9 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { AppGrid } from "./AppGrid";
 import { useUserAuth } from "../contexts/UserAuthContext";
-import { logout } from "../api/userAuth";
 
 export const AppHeader = (): JSX.Element => {
-  const { setUser, user } = useUserAuth();
-  const onLogout = () => {
-    logout();
-    setUser(null);
-  };
+  const { logoutUser, user } = useUserAuth();
   return (
     <AppGrid w="full" px="1.5rem" bg="slate.50">
       <Flex
@@ -19,7 +14,7 @@ export const AppHeader = (): JSX.Element => {
       >
         <Text textStyle="responsive-heading.heavy">Linkey</Text>
         {user && (
-          <Button bg="slate.500" border="slate.500" size="s" onClick={onLogout}>
+          <Button size="s" onClick={logoutUser}>
             Log out
           </Button>
         )}

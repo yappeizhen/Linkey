@@ -1,41 +1,67 @@
-import { Body, Controller, Post, Response } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  Response,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
+import { Link } from '../entities/link.entity';
+import { UserService } from './user.service';
+import { AuthGuard } from '../guards/auth.guard';
 import { AuthService } from '../auth/auth.service';
+import { getSafeUser } from '../utils/auth';
 
 @Controller('users')
 export class UserController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
 
-  @Post('signup')
-  async signup(@Body() { username, password }, @Response() res) {
+  @Get('/whoami')
+  async getUser(@Request() req, @Response() res) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'No authorization cookie found' });
+    }
+    let decoded;
     try {
-      const { access_token, user } = await this.authService.signup(
-        username,
-        password,
-      );
-      res.cookie('jwt', access_token, { httpOnly: true });
-      res.status(201).send({ user, message: 'Signed up and logged in' });
-    } catch (err) {
-      res.status(401).send({ message: err.message });
+      decoded = this.authService.verifyToken(token);
+    } catch (error) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    const userId = decoded.sub;
+    try {
+      const user = await this.userService.getUser(userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      return res.status(200).json({ user: getSafeUser(user) });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 
-  @Post('login')
-  async login(@Body() { username, password }, @Response() res) {
-    try {
-      const { access_token, user } = await this.authService.login(
-        username,
-        password,
-      );
-      res.cookie('jwt', access_token, { httpOnly: true });
-      res.status(201).send({ user, message: 'Logged in' });
-    } catch (err) {
-      res.status(401).send({ message: err.message });
-    }
+  @Get(':id/links')
+  async getUserLinks(@Param('id') id: number): Promise<Link[]> {
+    return await this.userService.getUserLinks(id);
   }
 
-  @Post('logout')
-  async logout(@Response() res) {
-    res.clearCookie('jwt');
-    res.status(200).send({ message: 'Logged out' });
+  @UseGuards(AuthGuard)
+  @Post(':id/links')
+  async createNewLink(
+    @Request() req,
+    @Param('id') userId: number,
+    @Body('originalUrl') originalUrl: string,
+  ): Promise<Link> {
+    if (req.user.id !== userId) {
+      throw new UnauthorizedException(
+        'You are not authorized to create a link for this user',
+      );
+    }
+    return await this.userService.createUserLink(userId, originalUrl);
   }
 }

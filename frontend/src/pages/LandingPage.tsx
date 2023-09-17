@@ -14,36 +14,39 @@ import {
 import { LandingSection } from "../components/LandingSection";
 import landingVector from "../assets/landing-vector.png";
 import { AppHeader } from "../components/AppHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppFooter from "../components/AppFooter";
 import { useUserAuth } from "../contexts/UserAuthContext";
 import { login, signup } from "../api/userAuth";
 import { useNavigate } from "react-router-dom";
+import LoadingPage from "./LoadingPage";
 
 const LandingPage = () => {
-  const navigate = useNavigate();
   const toast = useToast();
   const [isSignupLoading, setIsSignupLoading] = useState<boolean>(false);
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
-  const { setUser } = useUserAuth();
+  const navigate = useNavigate();
+  const { isAuthLoading, user, setTokenAndFetchUser } = useUserAuth();
+
+  useEffect(() => {
+    if (user) navigate("/dashboard");
+  }, [user, navigate]);
 
   const onClickLogin = async () => {
     setIsLoginLoading(true);
     if (username && password) {
       try {
-        const { user, message } = await login({ username, password });
-        if (user) {
-          // Update user context
-          setUser(user);
-          // Redirect
-          navigate("/");
+        const data = await login({ username, password });
+        if (data.token) {
+          // Update context
+          setTokenAndFetchUser(data.token);
         } else {
           toast({
             status: "error",
             title: "Authentication Failed",
-            description: message,
+            description: data.message,
           });
         }
       } catch (err: any) {
@@ -57,17 +60,15 @@ const LandingPage = () => {
   const onClickSignup = async () => {
     if (username && password) {
       try {
-        const { user, message } = await signup({ username, password });
-        if (user) {
+        const data = await signup({ username, password });
+        if (data.token) {
           // Update user context
-          setUser(user);
-          // Redirect
-          navigate("/");
+          setTokenAndFetchUser(data.token);
         } else {
           toast({
             status: "error",
             title: "Authentication failed",
-            description: message,
+            description: data.message,
           });
         }
       } catch (err: any) {
@@ -78,10 +79,12 @@ const LandingPage = () => {
     }
   };
 
+  if (isAuthLoading) return <LoadingPage />;
+
   return (
     <VStack w="full" h="100vh">
       <AppHeader />
-      <LandingSection justifyContent="center" mt={{ base: 16, md: 0 }}>
+      <LandingSection justifyContent="center">
         <Stack
           direction={{ base: "column", md: "row" }}
           align="center"
@@ -136,8 +139,6 @@ const LandingPage = () => {
               isLoading={isSignupLoading}
               isDisabled={!username || !password}
               onClick={onClickSignup}
-              bg="slate.400"
-              borderColor="slate.400"
             >
               Sign up
             </Button>
@@ -146,8 +147,6 @@ const LandingPage = () => {
               isDisabled={!username || !password}
               onClick={onClickLogin}
               variant="outline"
-              color="slate.400"
-              borderColor="slate.400"
             >
               Log in
             </Button>
