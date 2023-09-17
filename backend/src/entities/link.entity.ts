@@ -15,7 +15,7 @@ export class Link {
   @Column('text')
   originalUrl: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: null })
   deletedAt: Date | null;
 
   @Index()

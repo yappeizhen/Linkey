@@ -5,10 +5,12 @@ import {
   Post,
   Request,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { Link } from '../entities/link.entity';
 
 import { LinkService } from './link.service';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('links')
 export class LinkController {
@@ -19,9 +21,10 @@ export class LinkController {
     return await this.linkService.getLink(id);
   }
 
-  @Post(':linkId')
+  @UseGuards(AuthGuard)
+  @Post(':linkId/delete')
   async deleteLink(@Request() req, @Param('linkId') linkId: number) {
-    const userId = req.user.id; // Assuming `req.user` holds the authenticated user information
+    const userId = req.user?.id;
     const link = await this.linkService.getLink(linkId);
     if (link.userId !== userId) {
       throw new UnauthorizedException(

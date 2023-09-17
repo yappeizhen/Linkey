@@ -5,7 +5,6 @@ import { getLink } from "../api/links";
 const ShortenedLinkPage = () => {
   const navigate = useNavigate();
   const { linkId } = useParams();
-  console.log(linkId);
   useEffect(() => {
     if (!linkId) navigate("/");
     try {

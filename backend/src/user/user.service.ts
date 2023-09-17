@@ -16,8 +16,14 @@ export class UserService {
   async getUser(id: number): Promise<User> {
     return await this.userRepository.findOne({ where: { id } });
   }
+
   async getUserLinks(id: number): Promise<Link[]> {
-    return await this.linkRepository.find({ where: { userId: id } });
+    const res = await this.linkRepository
+      .createQueryBuilder('link')
+      .where('link.userId = :userId', { userId: id })
+      .andWhere('link.deletedAt IS NULL')
+      .getMany();
+    return res;
   }
 
   async createUserLink(userId: number, originalUrl: string): Promise<Link> {

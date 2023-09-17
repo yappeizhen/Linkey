@@ -3,6 +3,7 @@ import {
   Flex,
   FormControl,
   HStack,
+  IconButton,
   Image,
   Input,
   Stack,
@@ -19,10 +20,10 @@ import {
 } from "@chakra-ui/react";
 import { LandingSection } from "../components/LandingSection";
 import dashboardVector from "../assets/dashboard-vector.jpg";
-import { FaArrowDown } from "react-icons/fa";
+import { FaArrowDown, FaTrash } from "react-icons/fa";
 import { AppHeader } from "../components/AppHeader";
 import { useEffect, useState } from "react";
-import { createLink, getUserLinks } from "../api/links";
+import { createLink, deleteLink, getUserLinks } from "../api/links";
 import AppFooter from "../components/AppFooter";
 import LinkeyModal from "../features/LinkeyModal";
 import { useUserAuth } from "../contexts/UserAuthContext";
@@ -79,6 +80,18 @@ const MainDashboardPage = () => {
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const onDelete = async (linkId: number) => {
+    try {
+      await deleteLink(linkId);
+      const updateLinks = userLinks.filter((item) => {
+        return item.id !== linkId;
+      });
+      setUserLinks(updateLinks);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -188,6 +201,7 @@ const MainDashboardPage = () => {
                     <Th>No.</Th>
                     <Th>Origin URL</Th>
                     <Th>Shortened URL</Th>
+                    <Th>Actions</Th>
                   </Tr>
                 </Thead>
                 <Tbody textStyle={"body-1"}>
@@ -205,6 +219,20 @@ const MainDashboardPage = () => {
                           <a href={url} target="_">
                             {url}
                           </a>
+                        </Td>
+                        <Td maxW="300px" overflowX="clip" textAlign="center">
+                          <IconButton
+                            aria-label="delete"
+                            size="xxs"
+                            border="none"
+                            variant="ghost"
+                            opacity="0.5"
+                            _hover={{ opacity: "1" }}
+                            icon={<FaTrash />}
+                            onClick={() => {
+                              onDelete(userLink.id);
+                            }}
+                          />
                         </Td>
                       </Tr>
                     );

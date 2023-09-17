@@ -41,7 +41,6 @@ export class UserController {
   @Post(':id/links')
   async createNewLink(
     @Request() req,
-    @Param('id') userId: number,
     @Body('originalUrl') originalUrl: string,
   ): Promise<Link> {
     if (!req.user.id) {

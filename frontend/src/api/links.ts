@@ -32,3 +32,16 @@ export const getUserLinks = async (id: number): Promise<GetUserLinkRes[]> => {
   });
   return response.json();
 };
+
+export const deleteLink = async (linkId: number): Promise<GetUserLinkRes> => {
+  const response = await fetch(`${BASE_URL}/links/${linkId}/delete`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionStorage.getItem(
+        SESSION_STORAGE_KEYS.linkeyToken
+      )}`,
+    },
+  });
+  return response.json();
+};

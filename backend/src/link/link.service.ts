@@ -10,11 +10,20 @@ export class LinkService {
     private readonly linkRepository: Repository<Link>,
   ) {}
 
-  async getLink(id: number): Promise<Link> {
-    return await this.linkRepository.findOneBy({ id });
+  private async findOne(id: number): Promise<Link> {
+    return await this.linkRepository
+      .createQueryBuilder('link')
+      .where('id = :linkId', { linkId: id })
+      .andWhere('link.deletedAt IS NULL')
+      .getOne();
   }
+
+  async getLink(id: number): Promise<Link> {
+    return await this.findOne(id);
+  }
+
   async deleteLink(id: number): Promise<void> {
-    const link = await this.linkRepository.findOneBy({ id });
+    const link = await this.findOne(id);
     if (link) {
       link.deletedAt = new Date();
       this.linkRepository.save(link);
