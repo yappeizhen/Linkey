@@ -22,27 +22,18 @@ export class UserController {
     private authService: AuthService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get('/whoami')
   async getUser(@Request() req, @Response() res) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ message: 'No authorization cookie found' });
-    }
-    let decoded;
-    try {
-      decoded = this.authService.verifyToken(token);
-    } catch (error) {
-      return res.status(401).json({ message: 'Invalid token' });
-    }
-    const userId = decoded.sub;
-    try {
-      const user = await this.userService.getUser(userId);
-      if (!user) return res.status(404).json({ message: 'User not found' });
-      return res.status(200).json({ user: getSafeUser(user) });
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal server error' });
-    }
+    if (req.user.id)
+      try {
+        const user = await this.userService.getUser(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        return res.status(200).json({ user: getSafeUser(user) });
+      } catch (error) {
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+    return null;
   }
 
   @Get(':id/links')
@@ -57,7 +48,7 @@ export class UserController {
     @Param('id') userId: number,
     @Body('originalUrl') originalUrl: string,
   ): Promise<Link> {
-    if (req.user.id !== userId) {
+    if (req.user.id !== +userId) {
       throw new UnauthorizedException(
         'You are not authorized to create a link for this user',
       );

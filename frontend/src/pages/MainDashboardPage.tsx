@@ -50,14 +50,14 @@ const MainDashboardPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [originUrl, setOriginUrl] = useState<string | undefined>();
   const [newLink, setNewLink] = useState<GetUserLinkRes | undefined>();
-  const [userLinks, setUserLink] = useState<GetUserLinkRes[]>([]);
+  const [userLinks, setUserLinks] = useState<GetUserLinkRes[]>([]);
 
   useEffect(() => {
     if (!user) return;
     setIsFetching(true);
     getUserLinks(user.id)
       .then((links) => {
-        setUserLink(links);
+        setUserLinks(links);
       })
       .catch((err) => console.error(err))
       .finally(() => setIsFetching(false));
@@ -73,6 +73,7 @@ const MainDashboardPage = () => {
           originalUrl: originUrl,
         });
         setNewLink(newLink);
+        setUserLinks([newLink, ...userLinks]);
       } catch (err) {
         console.error(err);
       } finally {
@@ -176,7 +177,7 @@ const MainDashboardPage = () => {
         alignItems="center"
       >
         <Text textStyle="h1" textAlign="center">
-          All Snippets
+          All your links
         </Text>
         {userLinks.length > 0 ? (
           <VStack w="full">

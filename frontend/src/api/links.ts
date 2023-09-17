@@ -21,6 +21,7 @@ export const createLink = async ({
         SESSION_STORAGE_KEYS.linkeyToken
       )}`,
     },
+    body: JSON.stringify({ userId, originalUrl }),
   });
   return response.json();
 };
