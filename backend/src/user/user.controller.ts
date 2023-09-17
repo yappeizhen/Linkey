@@ -7,22 +7,30 @@ export class UserController {
 
   @Post('signup')
   async signup(@Body() { username, password }, @Response() res) {
-    const { access_token, user } = await this.authService.signup(
-      username,
-      password,
-    );
-    res.cookie('jwt', access_token, { httpOnly: true });
-    res.status(201).send({ user, message: 'Signed up and logged in' });
+    try {
+      const { access_token, user } = await this.authService.signup(
+        username,
+        password,
+      );
+      res.cookie('jwt', access_token, { httpOnly: true });
+      res.status(201).send({ user, message: 'Signed up and logged in' });
+    } catch (err) {
+      res.status(401).send({ message: err.message });
+    }
   }
 
   @Post('login')
   async login(@Body() { username, password }, @Response() res) {
-    const { access_token, user } = await this.authService.login(
-      username,
-      password,
-    );
-    res.cookie('jwt', access_token, { httpOnly: true });
-    res.status(201).send({ user, message: 'Logged in' });
+    try {
+      const { access_token, user } = await this.authService.login(
+        username,
+        password,
+      );
+      res.cookie('jwt', access_token, { httpOnly: true });
+      res.status(201).send({ user, message: 'Logged in' });
+    } catch (err) {
+      res.status(401).send({ message: err.message });
+    }
   }
 
   @Post('logout')

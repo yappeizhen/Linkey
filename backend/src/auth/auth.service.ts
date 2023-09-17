@@ -31,11 +31,13 @@ export class AuthService {
 
   async login(username: string, plainPassword: string) {
     const user = await this.userRepository.findOne({ where: { username } });
-    if (!user) return null;
+    if (!user) throw new Error('Username not found');
+
     const isVerified = await bcrypt.compare(plainPassword, user.password);
     if (!isVerified) {
-      return null;
+      throw new Error('Incorrect password');
     }
+
     const safeUser = getSafeUser(user);
     return {
       access_token: this.createToken(safeUser),
@@ -44,6 +46,8 @@ export class AuthService {
   }
 
   async signup(username: string, plainPassword: string) {
+    const existingUser = await this.userRepository.findOneBy({ username });
+    if (existingUser) throw new Error('Username already exists');
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
     const newUser = await this.userRepository.save({
       username,

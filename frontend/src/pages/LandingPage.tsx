@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { LandingSection } from "../components/LandingSection";
 import landingVector from "../assets/landing-vector.png";
@@ -21,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [isSignupLoading, setIsSignupLoading] = useState<boolean>(false);
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string | undefined>();
@@ -31,15 +33,20 @@ const LandingPage = () => {
     setIsLoginLoading(true);
     if (username && password) {
       try {
-        const data = await login({ username, password });
-        const { user } = data;
+        const { user, message } = await login({ username, password });
         if (user) {
           // Update user context
           setUser(user);
           // Redirect
           navigate("/");
+        } else {
+          toast({
+            status: "error",
+            title: "Authentication Failed",
+            description: message,
+          });
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
       } finally {
         setIsLoginLoading(false);
@@ -50,14 +57,20 @@ const LandingPage = () => {
   const onClickSignup = async () => {
     if (username && password) {
       try {
-        const { user } = await signup({ username, password });
+        const { user, message } = await signup({ username, password });
         if (user) {
           // Update user context
           setUser(user);
           // Redirect
           navigate("/");
+        } else {
+          toast({
+            status: "error",
+            title: "Authentication failed",
+            description: message,
+          });
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
       } finally {
         setIsSignupLoading(false);
@@ -120,23 +133,23 @@ const LandingPage = () => {
               />
             </HStack>
             <Button
-              isLoading={isLoginLoading}
-              isDisabled={!username || !password}
-              onClick={onClickLogin}
-              bg="slate.400"
-              borderColor="slate.400"
-            >
-              Log in
-            </Button>
-            <Button
               isLoading={isSignupLoading}
               isDisabled={!username || !password}
               onClick={onClickSignup}
+              bg="slate.400"
+              borderColor="slate.400"
+            >
+              Sign up
+            </Button>
+            <Button
+              isLoading={isLoginLoading}
+              isDisabled={!username || !password}
+              onClick={onClickLogin}
               variant="outline"
               color="slate.400"
               borderColor="slate.400"
             >
-              Sign up
+              Log in
             </Button>
           </Flex>
           <Flex
