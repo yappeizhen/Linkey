@@ -181,7 +181,7 @@ const MainDashboardPage = () => {
         </Text>
         {userLinks.length > 0 ? (
           <VStack w="full">
-            <TableContainer h={480} w="full" overflowY="auto" overflowX="auto">
+            <TableContainer h={480} overflowY="auto" overflowX="auto">
               <Table>
                 <Thead>
                   <Tr>
@@ -202,7 +202,9 @@ const MainDashboardPage = () => {
                           {userLink.originalUrl}
                         </Td>
                         <Td maxW="300px" overflowX="clip">
-                          {url}
+                          <a href={url} target="_">
+                            {url}
+                          </a>
                         </Td>
                       </Tr>
                     );

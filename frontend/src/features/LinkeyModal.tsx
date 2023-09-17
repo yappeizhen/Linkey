@@ -12,7 +12,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { GetUserLinkRes } from "../types/links";
-import { Link } from "react-router-dom";
 
 const LinkeyModal = ({
   isOpen,
@@ -40,24 +39,8 @@ const LinkeyModal = ({
             gap={4}
           >
             <Box
-              border="1px"
-              w="100%"
-              borderColor="grey"
-              p={4}
-              display="flex"
-              overflowX="auto"
-              textAlign="center"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Text textAlign="center" textStyle="subhead-3">
-                {link.originalUrl}
-              </Text>
-            </Box>
-            <Box
               w="100%"
               p={4}
-              borderRadius={10}
               display="flex"
               textAlign="center"
               justifyContent="center"
@@ -75,6 +58,21 @@ const LinkeyModal = ({
               <a href={url} target="_">
                 {url}
               </a>
+            </Box>
+            <Box
+              border="1px"
+              w="100%"
+              p={4}
+              borderColor="grey"
+              display="flex"
+              overflowX="auto"
+              textAlign="center"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Text textAlign="center" textStyle="subhead-3">
+                {link.originalUrl}
+              </Text>
             </Box>
           </VStack>
         </ModalBody>
