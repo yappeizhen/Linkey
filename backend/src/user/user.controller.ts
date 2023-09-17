@@ -20,7 +20,7 @@ export class UserController {
 
   @Post('signup')
   async signup(@Request() { email, password }, @Response() res) {
-    const jwt = await this.userService.signup(email, password);
+    const jwt = await this.authService.signup(email, password);
     res.cookie('jwt', jwt.access_token, { httpOnly: true });
     res.status(201).send({ message: 'Signed up and logged in' });
   }
