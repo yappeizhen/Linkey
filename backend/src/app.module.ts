@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
-import { PastyConfigModule } from './database/config.module';
+import { LinkeyConfigModule } from './database/config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { AuthService } from './auth/auth.service';
@@ -13,7 +13,7 @@ import { LinkController } from './link/link.controller';
 import { LinkService } from './link/link.service';
 
 @Module({
-  imports: [PastyConfigModule, TypeOrmModule.forFeature([User, Link])],
+  imports: [LinkeyConfigModule, TypeOrmModule.forFeature([User, Link])],
   controllers: [AppController, UserController, AuthController, LinkController],
   providers: [AppService, UserService, AuthService, LinkService],
 })

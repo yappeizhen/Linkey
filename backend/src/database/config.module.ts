@@ -27,4 +27,4 @@ import configuration from './configuration';
   ],
   exports: [ConfigModule],
 })
-export class PastyConfigModule {}
+export class LinkeyConfigModule {}

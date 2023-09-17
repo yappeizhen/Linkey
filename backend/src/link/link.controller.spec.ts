@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { PastyConfigModule } from '../database/config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../entities/user.entity';
+import { LinkController } from './link.controller';
+import { LinkService } from './link.service';
+import { Link } from '../entities/link.entity';
+import { LinkeyConfigModule } from '../database/config.module';
 
-describe('UserController', () => {
-  let controller: UserController;
+describe('LinkController', () => {
+  let controller: LinkController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PastyConfigModule, TypeOrmModule.forFeature([User])],
-      controllers: [UserController],
-      providers: [UserService],
+      imports: [LinkeyConfigModule, TypeOrmModule.forFeature([Link])],
+      controllers: [LinkController],
+      providers: [LinkService],
     }).compile();
 
-    controller = module.get<UserController>(UserController);
+    controller = module.get<LinkController>(LinkController);
   });
 
   it('should be defined', () => {

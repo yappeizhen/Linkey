@@ -1,15 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
-import { PastyConfigModule } from '../database/config.module';
+import { Link } from '../entities/link.entity';
+import { UserService } from './user.service';
+import { LinkeyConfigModule } from '../database/config.module';
 
 describe('UserService', () => {
   let service: UserService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PastyConfigModule, TypeOrmModule.forFeature([User])],
+      imports: [LinkeyConfigModule, TypeOrmModule.forFeature([User, Link])],
       providers: [UserService],
     }).compile();
 

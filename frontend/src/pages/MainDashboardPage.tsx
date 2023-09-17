@@ -122,7 +122,7 @@ const MainDashboardPage = () => {
                 <Image
                   display={{ md: "none", base: "flex" }}
                   src={dashboardVector}
-                  alt="pastey hero"
+                  alt="linkey hero"
                   height={16}
                 />
                 <Text
@@ -163,7 +163,7 @@ const MainDashboardPage = () => {
               aria-hidden
               justify="right"
             >
-              <Image src={dashboardVector} alt="pastey hero" width={"100%"} />
+              <Image src={dashboardVector} alt="linkey hero" width={"100%"} />
             </Flex>
           </Stack>
         </LandingSection>
