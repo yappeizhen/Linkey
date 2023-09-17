@@ -41,25 +41,21 @@ export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | undefined>();
   const [token, setToken] = useState<string | undefined>();
   const navigate = useNavigate();
-  const toast = useToast();
 
-  const setTokenAndFetchUser = useCallback(
-    async (newToken: string) => {
-      setIsAuthLoading(true);
+  const setTokenAndFetchUser = useCallback(async (newToken: string) => {
+    setIsAuthLoading(true);
+    try {
+      const data = await whoami({
+        token: newToken,
+      });
+      setUser(data.user);
       setToken(newToken);
-      try {
-        const data = await whoami({
-          token: newToken,
-        });
-        setUser(data.user);
-      } catch (e: any) {
-        toast({ status: "error", description: e.message });
-      } finally {
-        setIsAuthLoading(false);
-      }
-    },
-    [toast]
-  );
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      setIsAuthLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     // Check for token in sessionStorage on initial load

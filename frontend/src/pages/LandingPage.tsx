@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 
 const LandingPage = () => {
-  const toast = useToast();
+  const toast = useToast({ isClosable: true, duration: 1500 });
   const [isSignupLoading, setIsSignupLoading] = useState<boolean>(false);
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string | undefined>();
@@ -132,6 +132,7 @@ const LandingPage = () => {
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
+                type="password"
                 placeholder="A really strong password only you know"
               />
             </HStack>
