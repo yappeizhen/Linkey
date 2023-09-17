@@ -7,7 +7,7 @@ export class User {
   id: number;
 
   @Column('varchar', { length: 255, unique: true })
-  email: string;
+  username: string;
 
   @Column('text')
   password: string;

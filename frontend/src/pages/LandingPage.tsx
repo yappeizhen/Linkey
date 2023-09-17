@@ -19,12 +19,12 @@ import AppFooter from "../components/AppFooter";
 const LandingPage = () => {
   const [isSignupLoading, setIsSignupLoading] = useState<boolean>(false);
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string | undefined>();
+  const [username, setUsername] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
 
   const onClickLogin = async () => {
     setIsLoginLoading(true);
-    if (email && password) {
+    if (username && password) {
       try {
       } catch (err) {
         console.error(err);
@@ -34,9 +34,9 @@ const LandingPage = () => {
     }
   };
 
-  const onClickSubmit = async () => {
+  const onClickSignup = async () => {
     setIsSignupLoading(true);
-    if (email && password) {
+    if (username && password) {
       try {
       } catch (err) {
         console.error(err);
@@ -79,13 +79,12 @@ const LandingPage = () => {
                 justifyContent="space-between"
                 gap={4}
               >
-                <FormLabel m={0}>Email</FormLabel>
+                <FormLabel m={0}>Username</FormLabel>
                 <Input
-                  placeholder="Johanna@email.com"
+                  placeholder="Your cool unique alter ego"
                   w="75%"
-                  value={email}
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </HStack>
             </FormControl>
@@ -103,7 +102,7 @@ const LandingPage = () => {
             </HStack>
             <Button
               isLoading={isLoginLoading}
-              isDisabled={!email || !password}
+              isDisabled={!username || !password}
               onClick={onClickLogin}
               bg="slate.400"
               borderColor="slate.400"
@@ -112,8 +111,8 @@ const LandingPage = () => {
             </Button>
             <Button
               isLoading={isSignupLoading}
-              isDisabled={!email || !password}
-              onClick={onClickSubmit}
+              isDisabled={!username || !password}
+              onClick={onClickSignup}
               variant="outline"
               color="slate.400"
               borderColor="slate.400"

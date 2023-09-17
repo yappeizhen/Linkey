@@ -24,10 +24,10 @@ export class AuthService {
     }
   }
 
-  async login(email: string, plainPassword: string) {
-    const user = await this.userService.validateUser(email, plainPassword);
+  async login(username: string, plainPassword: string) {
+    const user = await this.userService.validateUser(username, plainPassword);
     if (user) {
-      const payload = { email: user.email, sub: user.id };
+      const payload = { username: user.username, sub: user.id };
       return {
         access_token: this.createToken(payload),
       };
@@ -35,9 +35,9 @@ export class AuthService {
     return null;
   }
 
-  async signup(email: string, plainPassword: string) {
-    const newUser = await this.userService.createUser(email, plainPassword);
-    const payload = { email: newUser.email, sub: newUser.id };
+  async signup(username: string, plainPassword: string) {
+    const newUser = await this.userService.createUser(username, plainPassword);
+    const payload = { username: newUser.username, sub: newUser.id };
     return {
       access_token: this.createToken(payload),
     };

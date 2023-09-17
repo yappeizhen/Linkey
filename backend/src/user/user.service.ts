@@ -12,10 +12,10 @@ export class UserService {
   ) {}
 
   async validateUser(
-    email: string,
+    username: string,
     plainPassword: string,
   ): Promise<Partial<User> | null> {
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({ where: { username } });
     if (!user) {
       throw new Error('User not found');
     }
@@ -29,10 +29,10 @@ export class UserService {
     throw new Error('Incorrect password');
   }
 
-  async createUser(email: string, plainPassword: string): Promise<User> {
+  async createUser(username: string, plainPassword: string): Promise<User> {
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
     return await this.userRepository.save({
-      email,
+      username,
       password: hashedPassword,
     });
   }

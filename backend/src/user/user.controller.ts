@@ -12,21 +12,21 @@ export class UserController {
 
   @Post()
   async create(
-    @Body('email') email: string,
+    @Body('username') username: string,
     @Body('password') password: string,
   ): Promise<User> {
-    return await this.userService.createUser(email, password);
+    return await this.userService.createUser(username, password);
   }
 
   @Post('signup')
-  async signup(@Request() { email, password }, @Response() res) {
-    const jwt = await this.authService.signup(email, password);
+  async signup(@Request() { username, password }, @Response() res) {
+    const jwt = await this.authService.signup(username, password);
     res.cookie('jwt', jwt.access_token, { httpOnly: true });
     res.status(201).send({ message: 'Signed up and logged in' });
   }
 
   @Post('login')
-  async login(@Body() body: { email: string; password: string }) {
+  async login(@Body() body: { username: string; password: string }) {
     // Validate user with database, then:
     return {
       access_token: this.authService.createToken(body),
