@@ -47,3 +47,6 @@ This should start up the frontend, backend, and a dockerized PosgreSQL database.
 - Frontend should be served from http://localhost:3000.
 
 ### Demo
+
+Uploading Screen Recording 2023-09-18 at 12.44.09 AM.mov…
+
