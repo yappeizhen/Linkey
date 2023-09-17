@@ -1,27 +1,33 @@
-import axios from "axios";
 import { BASE_URL } from "../constants/api";
+import { SESSION_STORAGE_KEYS } from "../constants/storage";
 import { CreateUserLinkReq, GetUserLinkRes } from "../types/links";
 
 export const getLink = async (linkId: number) => {
-  const response = await axios.post(`${BASE_URL}/links/${linkId}`, {
-    withCredentials: true,
+  const response = await fetch(`${BASE_URL}/links/${linkId}`, {
+    method: "GET",
   });
-  return response.data;
+  return response.json();
 };
 
 export const createLink = async ({
   userId,
   originalUrl,
 }: CreateUserLinkReq): Promise<GetUserLinkRes> => {
-  const response = await axios.post(
-    `${BASE_URL}/users/${userId}/links`,
-    originalUrl,
-    { withCredentials: true }
-  );
-  return response.data;
+  const response = await fetch(`${BASE_URL}/users/${userId}/links`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionStorage.getItem(
+        SESSION_STORAGE_KEYS.linkeyToken
+      )}`,
+    },
+  });
+  return response.json();
 };
 
 export const getUserLinks = async (id: number): Promise<GetUserLinkRes[]> => {
-  const response = await axios.get(`${BASE_URL}/users/${id}/links`);
-  return response.data;
+  const response = await fetch(`${BASE_URL}/users/${id}/links`, {
+    method: "GET",
+  });
+  return response.json();
 };

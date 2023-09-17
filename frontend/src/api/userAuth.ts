@@ -8,7 +8,6 @@ export const whoami = async ({ token }: { token: string }) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
   return response.json();
 };
 

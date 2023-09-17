@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout, whoami } from "../api/userAuth";
+import { SESSION_STORAGE_KEYS } from "../constants/storage";
 
 type User = {
   id: number;
@@ -33,10 +34,6 @@ export const useUserAuth = () => {
     throw new Error("useUserAuth must be used within a UserAuthProvider");
   }
   return context;
-};
-
-const SESSION_STORAGE_KEYS = {
-  linkeyToken: "linkeyToken",
 };
 
 export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
