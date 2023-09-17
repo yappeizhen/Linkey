@@ -13,4 +13,11 @@ export class LinkService {
   async getLink(id: number): Promise<Link> {
     return await this.linkRepository.findOneBy({ id });
   }
+  async deleteLink(id: number): Promise<void> {
+    const link = await this.linkRepository.findOneBy({ id });
+    if (link) {
+      link.deletedAt = new Date();
+      this.linkRepository.save(link);
+    }
+  }
 }

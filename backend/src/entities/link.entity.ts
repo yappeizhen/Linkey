@@ -15,6 +15,9 @@ export class Link {
   @Column('text')
   originalUrl: string;
 
+  @Column({ nullable: true })
+  deletedAt: Date | null;
+
   @Index()
   @Column('int4')
   userId: number;

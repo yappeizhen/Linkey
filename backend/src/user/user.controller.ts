@@ -12,15 +12,11 @@ import {
 import { Link } from '../entities/link.entity';
 import { UserService } from './user.service';
 import { AuthGuard } from '../guards/auth.guard';
-import { AuthService } from '../auth/auth.service';
 import { getSafeUser } from '../utils/auth';
 
 @Controller('users')
 export class UserController {
-  constructor(
-    private userService: UserService,
-    private authService: AuthService,
-  ) {}
+  constructor(private userService: UserService) {}
 
   @UseGuards(AuthGuard)
   @Get('/whoami')
@@ -48,11 +44,11 @@ export class UserController {
     @Param('id') userId: number,
     @Body('originalUrl') originalUrl: string,
   ): Promise<Link> {
-    if (req.user.id !== +userId) {
+    if (!req.user.id) {
       throw new UnauthorizedException(
         'You are not authorized to create a link for this user',
       );
     }
-    return await this.userService.createUserLink(userId, originalUrl);
+    return await this.userService.createUserLink(req.user.id, originalUrl);
   }
 }
