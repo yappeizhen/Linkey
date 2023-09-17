@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "target": "ESNext",
+    "module": "CommonJS",
+    "declaration": true,
+    "composite": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
