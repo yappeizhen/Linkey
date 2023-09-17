@@ -15,17 +15,30 @@ import landingVector from "../assets/landing-vector.png";
 import { AppHeader } from "../components/AppHeader";
 import { useState } from "react";
 import AppFooter from "../components/AppFooter";
+import { useUserAuth } from "../contexts/UserAuthContext";
+import { login, signup } from "../api/userAuth";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [isSignupLoading, setIsSignupLoading] = useState<boolean>(false);
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
+  const { setUser } = useUserAuth();
 
   const onClickLogin = async () => {
     setIsLoginLoading(true);
     if (username && password) {
       try {
+        const data = await login({ username, password });
+        const { user } = data;
+        if (user) {
+          // Update user context
+          setUser(user);
+          // Redirect
+          navigate("/");
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -35,9 +48,15 @@ const LandingPage = () => {
   };
 
   const onClickSignup = async () => {
-    setIsSignupLoading(true);
     if (username && password) {
       try {
+        const { user } = await signup({ username, password });
+        if (user) {
+          // Update user context
+          setUser(user);
+          // Redirect
+          navigate("/");
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -49,7 +68,7 @@ const LandingPage = () => {
   return (
     <VStack w="full" h="100vh">
       <AppHeader />
-      <LandingSection>
+      <LandingSection justifyContent="center" mt={{ base: 16, md: 0 }}>
         <Stack
           direction={{ base: "column", md: "row" }}
           align="center"
